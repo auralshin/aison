@@ -4,6 +4,27 @@
  */
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
-const deployedContracts = {} as const;
+const deployedContracts = {
+  // export type GenericContractsDeclaration = {
+  //     [chainId: number]: {
+  //       [contractName: string]: GenericContract;
+  //     };
+  //   };
+
+  "0x14a33": {
+    invoiceNFT: "0x16925a3dBBd777880708cA868Fe36481d0457Ce4",
+    tradeFi: "0xf0c75309c752d85759975c26e74bdd9c6bf7c962",
+    token: "0x14cc086c1A3462Bd311D5A762Bf7aca31Bc96ee2",
+    pool: "0xbf84b64aa81a2b75aac3460c47da545e12a89003",
+    plugin: "0xEa2F4177C1fd84244BCea45dC61A4964e6a98614",
+  },
+  "0x66eed" : {
+    invoiceNFT: "0x4e499be57daab760275a8931ddf5473c867d8ab0",
+    tradeFi: "",
+    token: "",
+    pool: "",
+    plugin: "",
+  }
+} as const;
 
 export default deployedContracts satisfies GenericContractsDeclaration;

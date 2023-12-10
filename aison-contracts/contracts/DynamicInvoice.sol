@@ -8,13 +8,15 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Pausable.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
 import "../libraries/Desc.sol";
 
 contract DynamicInvoice is
     ERC721,
     Ownable,
     ERC721Enumerable,
-    ERC721Pausable
+    ERC721Pausable,
+    AutomationCompatibleInterface
 {
     using Strings for uint256;
 
@@ -31,6 +33,9 @@ contract DynamicInvoice is
         address _user;
         InvoiceDetails details;
     }
+
+    uint256 public immutable interval;
+    uint256 public lastTimeStamp;
 
     mapping(address => bool) private _eligibleHolders;
 
@@ -51,14 +56,17 @@ contract DynamicInvoice is
     constructor(
         string memory name_,
         string memory symbol_,
-        address initialOwner
-    ) Ownable(initialOwner) ERC721(name_, symbol_) {}
+        address initialOwner,
+        uint256 updateInterval
+    ) Ownable(initialOwner) ERC721(name_, symbol_) {
+        interval = updateInterval;
+        lastTimeStamp = block.timestamp;
+    }
 
-modifier isNotMinted(uint256 tokenId) {
-    require(_ownerOf(tokenId) == address(0), "Token already minted.");
-    _;
-}
-
+    modifier isNotMinted(uint256 tokenId) {
+        require(_ownerOf(tokenId) == address(0), "Token already minted.");
+        _;
+    }
 
     modifier isMinted(uint256 tokenId) {
         require(_ownerOf(tokenId) != address(0), "Token not minted.");
@@ -124,12 +132,7 @@ modifier isNotMinted(uint256 tokenId) {
         string memory _invoiceAmount,
         string memory _invoiceCurrency,
         bool _isSettled
-    )
-        public
-        whenNotPaused
-        isMinted(_tokenId)
-        isNotSettled(_tokenId)
-    {
+    ) public whenNotPaused isMinted(_tokenId) isNotSettled(_tokenId) {
         InvoiceDetails storage invoice = _tokenURIs[_tokenId];
         invoice._invoiceStatus = _invoiceStatus;
         invoice._merkleRoot = _merkleRoot;
@@ -143,9 +146,27 @@ modifier isNotMinted(uint256 tokenId) {
         }
     }
 
-    function burnInvoice(
-        uint256 tokenId
-    ) external isMinted(tokenId) {
+    function checkUpkeep(
+        bytes calldata /* checkData */
+    )
+        external
+        view
+        override
+        returns (bool upkeepNeeded, bytes memory /* performData */)
+    {
+        upkeepNeeded = (block.timestamp - lastTimeStamp) > interval;
+    }
+
+    // Implement performUpkeep
+    function performUpkeep(bytes calldata /* performData */) external override {
+        if ((block.timestamp - lastTimeStamp) > interval) {
+            lastTimeStamp = block.timestamp;
+            // Perform the upkeep tasks
+            // Example: Iterate over invoices and update their status based on off-chain conditions
+        }
+    }
+
+    function burnInvoice(uint256 tokenId) external isMinted(tokenId) {
         _burn(tokenId);
         emit InvoiceBurned(tokenId);
     }
@@ -153,7 +174,10 @@ modifier isNotMinted(uint256 tokenId) {
     function tokenURI(
         uint256 tokenId
     ) public view virtual override returns (string memory) {
-        require(_ownerOf(tokenId) != address(0), "URI query for nonexistent token");
+        require(
+            _ownerOf(tokenId) != address(0),
+            "URI query for nonexistent token"
+        );
         string memory image = Base64.encode(bytes(createSVGParams(tokenId)));
         return
             InvoiceDesc.getTokenURI(
@@ -199,7 +223,7 @@ modifier isNotMinted(uint256 tokenId) {
             );
     }
 
-    function pauseContract() public  {
+    function pauseContract() public {
         _pause();
     }
 
