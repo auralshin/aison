@@ -6,7 +6,8 @@ AISON tackles these issues by migrating trade finance onto the blockchain, offer
 A critical innovation in AISON is the use of Merkle proofs for LC verification, adding a layer of security and authenticity. This method allows parties to verify document authenticity without exposing confidential details, further reducing fraud risks.
 
 AISON's solutions streamline trade finance, especially benefiting small and medium-sized enterprises often overlooked by traditional systems. It creates a more inclusive, efficient, and secure environment, revolutionizing global trade.
-![image](https://github.com/auralshin/aison/assets/41705919/ff28f12c-bdb2-4454-a5f6-79acf184e97d)
+![image](https://github.com/auralshin/aison/assets/41705919/6a6600fc-b44f-479b-a559-6c0fa0e6d2e2)
+
 
 ![image](https://github.com/auralshin/aison/assets/41705919/874799b4-1b0c-4c8f-9d13-71d3818ac9df)
 
