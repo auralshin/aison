@@ -16,7 +16,7 @@ AISON's solutions streamline trade finance, especially benefiting small and medi
 ### Deployed Contracts
 
 #### Base Goerli
-invoiceNFT: "0x16925a3dBBd777880708cA868Fe36481d0457Ce4",
+invoiceNFT: "0x16925a3dBBd777880708cA868Fe36481d0457Ce4", 
 tradeFi: "0xf0c75309c752d85759975c26e74bdd9c6bf7c962",
 token: "0x14cc086c1A3462Bd311D5A762Bf7aca31Bc96ee2",
 pool: "0xbf84b64aa81a2b75aac3460c47da545e12a89003",
@@ -28,3 +28,6 @@ tradeFi: 0x857f7ab1f3ff0c6552ae207095ac2bd1eedc01c0,
 token : 0x16925a3dBBd777880708cA868Fe36481d0457Ce4
 pool : 0x01b2578b9aa7a69afb723d847193da98f4743034
 plugin: 0xF5E9e34807A83E040e233d6554A036f7E79B6631
+
+
+https://testnets.opensea.io/collection/dynamic-invoice
